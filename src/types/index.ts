@@ -40,12 +40,28 @@ export interface Product {
 
 export interface ScraperConfig {
   userAgent: string;
-  proxyServer?: string;
   delay: number;
   maxRetries: number;
   timeout: number;
   screenshotDir: string;
   logLevel: 'debug' | 'info' | 'warn' | 'error';
+  cookiesDir: string;
+  sessionRotationInterval: number;
+  maxRequestsPerSession: number;
+  rateLimitDelay: {
+    min: number;
+    max: number;
+  };
+  stealthMode: {
+    rotateUserAgent: boolean;
+    useFingerprinting: boolean;
+    simulateHumanBehavior: boolean;
+    randomizeViewport: boolean;
+  };
+  scrapingBrowser: {
+    wsEndpoint: string;
+    seleniumEndpoint: string;
+  };
 }
 
 export interface ScrapingError extends Error {
@@ -54,14 +70,21 @@ export interface ScrapingError extends Error {
   metadata?: Record<string, unknown>;
 }
 
+export interface ScrapeMetadata {
+  scrapedAt: Date;
+  totalReviews: number;
+  scrapedReviews: number;
+  duration: number;
+  additionalInfo?: {
+    screenshotPath?: string;
+    apiSource?: string;
+    [key: string]: any;
+  };
+}
+
 export interface ReviewScrapeResult {
   product: Product;
   reviews: Review[];
   error?: ScrapingError;
-  metadata: {
-    scrapedAt: Date;
-    totalReviews: number;
-    scrapedReviews: number;
-    duration: number;
-  };
+  metadata: ScrapeMetadata;
 } 
